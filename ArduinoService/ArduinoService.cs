@@ -27,14 +27,12 @@ namespace ArduinoService
             _lastData = _sensorData.LastEntrie();
 
             _logger.Info(GetPropertyValues(_lastData) ?? "No last data found");
-
         }
 
         protected override void OnStop()
         {
             _logger.Info("Service stopped");
         }
-
 
         private string GetPropertyValues(object obj)
         {
@@ -45,15 +43,12 @@ namespace ArduinoService
 
             var t = obj.GetType();
 
-            var values = String.Join(",", t.GetProperties(BindingFlags.Public)
+            var values = String.Join(",", t.GetProperties(BindingFlags.Instance | BindingFlags.Public)
                 .ToList()
-                .Select(x => x.Name + "-" + x.GetValue(t)));
+                .Select(x => x.Name + "-" + x.GetValue(obj)));
 
             return values;
         }
-
     }
-
-
 
 }

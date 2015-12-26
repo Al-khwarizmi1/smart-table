@@ -8,7 +8,7 @@ namespace Shared.DataAccess
     public class SensorDataContext : DbContext
     {
 
-        public SensorDataContext() : base("connectionString")
+        public SensorDataContext() : base("SmartTable")
         {
             Database.SetInitializer<SensorDataContext>(null);
         }
