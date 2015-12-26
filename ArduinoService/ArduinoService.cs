@@ -1,9 +1,8 @@
 ﻿using System;
 using System.IO.Ports;
-using System.Linq;
-using System.Reflection;
 using System.ServiceProcess;
 using NLog;
+using Shared;
 using Shared.DataAccess;
 using Shared.Entities;
 
@@ -29,7 +28,7 @@ namespace ArduinoService
             _logger.Info("Service started");
             _lastData = _sensorData.LastEntrie();
 
-            _logger.Info(GetPropertyValues(_lastData) ?? "No last data found");
+            _logger.Info(Helpers.GetPropertyValues(_lastData) ?? "No last data found");
 
             serialPort1.PortName = "COM3";
             serialPort1.BaudRate = 9600;
@@ -67,30 +66,32 @@ namespace ArduinoService
         private void _serialPort_DataReceived(object sender, SerialDataReceivedEventArgs e)
         {
             var data = new SensorData { DateTime = DateTime.UtcNow, Height = Int32.Parse(serialPort1.ReadLine()) };
-            _sensorData.Add(data);
+            if (_lastData == null
+                || Math.Abs(_lastData.Height - data.Height) > 5
+                || (data.DateTime - _lastData.DateTime) > TimeSpan.FromMinutes(5))
+            {
+                _sensorData.Add(data);
+                _lastData = data;
+            }
         }
 
         protected override void OnStop()
         {
             _timer.Stop();
+            if (_lastData.Id == 0)
+            {
+                try
+                {
+                    _sensorData.Add(_lastData);
+                }
+                catch (Exception e)
+                {
+                    _logger.Error(e, "OnStop");
+                }
+            }
             _logger.Info("Service stopped");
         }
 
-        private string GetPropertyValues(object obj)
-        {
-            if (obj == null)
-            {
-                return null;
-            }
-
-            var t = obj.GetType();
-
-            var values = String.Join(",", t.GetProperties(BindingFlags.Instance | BindingFlags.Public)
-                .ToList()
-                .Select(x => x.Name + "-" + x.GetValue(obj)));
-
-            return values;
-        }
     }
 
 }

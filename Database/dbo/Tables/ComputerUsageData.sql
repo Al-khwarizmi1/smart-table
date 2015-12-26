@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[ComputerUsageData]
+(
+	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
+	[DateTime] DATETIME2 NOT NULL
+)

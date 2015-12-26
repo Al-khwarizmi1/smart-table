@@ -1,29 +1,28 @@
-﻿using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using Shared.Entities;
 
 namespace Shared.DataAccess
 {
-    public class SensorDataRepository
+    public class ComputerUsageRepository
     {
         DataContext _context;
 
-        public SensorDataRepository()
+        public ComputerUsageRepository()
         {
             _context = new DataContext();
         }
 
-        public SensorData LastEntrie()
+        public ComputerUsageData LastEntrie()
         {
-            return _context.SensorData
+            return _context.ComputerUsageData
                 .OrderByDescending(x => x.DateTime)
                 .Take(1)
                 .FirstOrDefault();
         }
 
-        public void Add(SensorData data)
+        public void Add(ComputerUsageData data)
         {
-            _context.SensorData.Add(data);
+            _context.ComputerUsageData.Add(data);
             _context.SaveChanges();
         }
     }

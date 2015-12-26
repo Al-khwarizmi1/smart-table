@@ -62,5 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Build Include="dbo\Tables\SensorData.sql" />
+    <Build Include="dbo\Tables\ComputerUsageData.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Database.publish.xml" />
   </ItemGroup>
 </Project>

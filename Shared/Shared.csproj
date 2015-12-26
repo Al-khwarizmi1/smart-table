@@ -50,8 +50,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DataAccess\ComputerUsageRepository.cs" />
+    <Compile Include="DataAccess\DataContext.cs" />
     <Compile Include="DataAccess\SensorDataRepository.cs" />
+    <Compile Include="Entities\ComputerUsageData.cs" />
     <Compile Include="Entities\SensorData.cs" />
+    <Compile Include="Helpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
