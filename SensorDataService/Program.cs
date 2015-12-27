@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ServiceProcess;
 
-namespace ComputerUsageService
+namespace SensorDataService
 {
     static class Program
     {
@@ -17,7 +12,7 @@ namespace ComputerUsageService
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new ComputerUsageService()
+                new SensorDataService()
             };
             ServiceBase.Run(ServicesToRun);
         }

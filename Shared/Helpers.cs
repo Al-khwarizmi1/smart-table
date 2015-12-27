@@ -21,5 +21,10 @@ namespace Shared
 
             return values;
         }
+
+        public static string ShortDateTime(this DateTime date)
+        {
+            return date.ToString("yyyy-MM-dd HH:mm");
+        }
     }
 }

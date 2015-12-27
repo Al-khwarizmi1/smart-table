@@ -20,6 +20,5 @@ namespace Shared.DataAccess
         }
 
         public DbSet<SensorData> SensorData { get; set; }
-        public DbSet<ComputerUsageData> ComputerUsageData { get; set; }
     }
 }

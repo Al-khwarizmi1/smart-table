@@ -1,4 +1,4 @@
-﻿namespace ArduinoService
+﻿namespace SensorDataService
 {
     partial class ProjectInstaller
     {
@@ -40,8 +40,8 @@
             // 
             // serviceInstaller1
             // 
-            this.serviceInstaller1.Description = "SmartTable Arduino Service";
-            this.serviceInstaller1.ServiceName = "SmartTable Arduino Service";
+            this.serviceInstaller1.Description = "SmartTable Sensor Data Service";
+            this.serviceInstaller1.ServiceName = "SmartTable Sensor Data Service";
             // 
             // ProjectInstaller
             // 

@@ -1,6 +1,6 @@
-﻿namespace ArduinoService
+﻿namespace SensorDataService
 {
-    partial class ArduinoService
+    partial class SensorDataService
     {
         /// <summary> 
         /// Required designer variable.
@@ -29,14 +29,14 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.SmartTableArduinoService = new System.ServiceProcess.ServiceController();
+            this.SmartTableSensorDataService = new System.ServiceProcess.ServiceController();
             this.serialPort1 = new System.IO.Ports.SerialPort(this.components);
             // 
             // serialPort1
             // 
             this.serialPort1.PortName = "COM3";
             // 
-            // ArduinoService
+            // SensorDataService
             // 
             this.ServiceName = "Service1";
 
@@ -44,7 +44,7 @@
 
         #endregion
 
-        private System.ServiceProcess.ServiceController SmartTableArduinoService;
+        private System.ServiceProcess.ServiceController SmartTableSensorDataService;
         private System.IO.Ports.SerialPort serialPort1;
     }
 }
