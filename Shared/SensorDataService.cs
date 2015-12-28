@@ -163,8 +163,7 @@ namespace Shared
                 _logger.Error("GetLastInputDate: " + GetLastError().ToString());
             }
 
-            //var lastInput = DateTime.Now.AddMilliseconds(-(Environment.TickCount - lastInputInfo.dwTime));
-            var lastInput = new DateTime(lastInputInfo.dwTime);
+            var lastInput = DateTime.Now.AddMilliseconds(-(Environment.TickCount - lastInputInfo.dwTime));
             _logger.Info($"Last input date:{lastInput.ShortDateTime()}, utc:{lastInput.ToUniversalTime().ShortDateTime()},  struct:{lastInputInfo.dwTime}");
 
 

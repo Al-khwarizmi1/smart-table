@@ -7,7 +7,7 @@ Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "Database", "Database\Databa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{AAD2F8CE-BFAB-4DC3-943D-EAA5F0461BF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorDataService", "SensorDataService\SensorDataService.csproj", "{75DE9EDF-F6DB-411D-8C6F-77044706067E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorDataCollector", "SensorDataCollector\SensorDataCollector.csproj", "{93153077-6C98-400A-A476-FC623B1A7A5F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +25,10 @@ Global
 		{AAD2F8CE-BFAB-4DC3-943D-EAA5F0461BF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AAD2F8CE-BFAB-4DC3-943D-EAA5F0461BF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AAD2F8CE-BFAB-4DC3-943D-EAA5F0461BF8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{75DE9EDF-F6DB-411D-8C6F-77044706067E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{75DE9EDF-F6DB-411D-8C6F-77044706067E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{75DE9EDF-F6DB-411D-8C6F-77044706067E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{75DE9EDF-F6DB-411D-8C6F-77044706067E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93153077-6C98-400A-A476-FC623B1A7A5F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93153077-6C98-400A-A476-FC623B1A7A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93153077-6C98-400A-A476-FC623B1A7A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93153077-6C98-400A-A476-FC623B1A7A5F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
