@@ -6,7 +6,7 @@ namespace Shared
 {
     public static class Helpers
     {
-        public static string GetPropertyValues(object obj)
+        public static string GetPropertyValues(this object obj)
         {
             if (obj == null)
             {

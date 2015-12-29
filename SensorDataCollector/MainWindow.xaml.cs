@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Diagnostics;
+using System.IO;
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
@@ -12,6 +14,9 @@ namespace SensorDataCollector
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         internal extern static bool DestroyIcon(IntPtr handle);
 
+        public static string BaseDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+
+
         private NotifyIcon _sysTrayIcon;
         private SensorDataService _service;
 
@@ -22,7 +27,14 @@ namespace SensorDataCollector
 
             CreateIcon();
             _service.Start();
-            EnsureAppIsInStartup();
+            try
+            {
+                EnsureAppIsInStartup();
+            }
+            catch (Exception e)
+            {
+                Debug.WriteLine(e);
+            }
         }
 
         public void EnsureAppIsInStartup()
@@ -44,7 +56,7 @@ namespace SensorDataCollector
         {
             _sysTrayIcon = new NotifyIcon();
             _sysTrayIcon.Text = "SmartTable";
-            _sysTrayIcon.Icon = new System.Drawing.Icon(@"Resources\table.ico", 40, 40);
+            _sysTrayIcon.Icon = new System.Drawing.Icon(Path.Combine(BaseDir, @"Resources\table.ico"), 40, 40);
             _sysTrayIcon.Visible = true;
 
             _sysTrayIcon.ContextMenu = new ContextMenu(CreateNotifyIconContextMenu());
@@ -59,8 +71,15 @@ namespace SensorDataCollector
                 Close();
             };
 
+            var restart = new MenuItem { Text = "Restart" };
+            restart.Click += (o, s) =>
+            {
+                _service.Stop();
+                _service.Start();
+            };
+
             return new MenuItem[] {
-                exit
+                restart,exit
             };
         }
     }

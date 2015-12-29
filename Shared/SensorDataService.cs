@@ -14,6 +14,9 @@ namespace Shared
         private const string GetHeight = "1";
 
         private SensorDataRepository _sensorDataRepository;
+        private SettingsRepository _settingsRepository;
+        private Settings _currentSettings;
+
         private SensorData _lastData;
         private Logger _logger;
         private System.Timers.Timer _timer;
@@ -39,31 +42,39 @@ namespace Shared
         public SensorDataService()
         {
             _sensorDataRepository = new SensorDataRepository();
+            _settingsRepository = new SettingsRepository();
+
             _logger = LogManager.GetCurrentClassLogger();
             _heights = new List<int>();
             _serialPort = new SerialPort();
 
-            _periodLength = TimeSpan.FromMinutes(5);
-
-            _serialPort.PortName = "COM3";
-            _serialPort.BaudRate = 9600;
-            _serialPort.DataReceived += serialPort1_DataReceived;
-
             _timer = new System.Timers.Timer();
-            _timer.Interval = 5000;
+
             _timer.Elapsed += _timer_Elapsed;
+            _serialPort.DataReceived += serialPort1_DataReceived;
         }
 
 
         public void Start()
         {
+            _currentSettings = _settingsRepository.LastEntrie();
+
+            _periodLength = TimeSpan.FromMinutes(_currentSettings.IntervalLength);
+
+            _logger.Info($"Loaded settings: {_currentSettings.GetPropertyValues()}");
+
+            _serialPort.PortName = _currentSettings.ArduinoComPort;
+            _serialPort.BaudRate = 9600;
+
+            _timer.Interval = 5000;
+
             _logger.Info("Service started");
             _lastData = _sensorDataRepository.LastEntrie();
 
             _logger.Info(Helpers.GetPropertyValues(_lastData) ?? "No last data found");
 
             //In case database has newer period as handled, to prevent having same period twice
-            if (_lastData != null && _lastData.DateTime.Add(_periodLength) > DateTime.UtcNow)
+            if (_lastData != null && _lastData.DateTime.Add(TimeSpan.FromMinutes(_lastData.IntervalLength)) > DateTime.UtcNow)
             {
                 _currentPeriod = _lastData.DateTime;
                 _periodHasInputData = true;
@@ -72,6 +83,8 @@ namespace Shared
             else
             {
                 _currentPeriod = GetCurrentPeriod();
+                _lastData = new SensorData { DateTime = _currentPeriod, IntervalLength = _currentSettings.IntervalLength };
+
                 _periodHasInputData = false;
                 _logger.Info("Current period set:" + _currentPeriod.ShortDateTime());
             }
@@ -93,7 +106,7 @@ namespace Shared
             {
                 if (_periodHasInputData)
                 {
-                    _sensorDataRepository.Add(new SensorData { DateTime = _currentPeriod, Height = (int)_heights.Average() });
+                    SaveSensorData();
                 }
 
                 _logger.Info($"Old period:{_currentPeriod}, total  heights:{_heights.Count}, has input data:{_periodHasInputData}");
@@ -102,6 +115,7 @@ namespace Shared
                 _heights.Clear();
                 _periodHasInputData = false;
                 _currentPeriod = GetCurrentPeriod();
+                _lastData = new SensorData { DateTime = _currentPeriod, IntervalLength = _currentSettings.IntervalLength };
             }
 
             MonitorLastInput();
@@ -170,10 +184,21 @@ namespace Shared
             return lastInput.ToUniversalTime();
         }
 
+        private void SaveSensorData()
+        {
+            _lastData.Height = (int)_heights.Average();
+            _sensorDataRepository.Add(_lastData);
+        }
+
         public void Stop()
         {
             _timer.Stop();
             _serialPort.Close();
+
+            if (_lastData.Id == 0 && _heights.Any() && _periodHasInputData)
+            {
+                SaveSensorData();
+            }
             _logger.Info("Service stopped");
         }
 

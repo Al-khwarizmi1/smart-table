@@ -2,5 +2,6 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
 	[DateTime] DATETIME2 NOT NULL,
+	[IntervalLength] INT NOT NULL DEFAULT(5),
 	[Height] INT NOT NULL
 )
