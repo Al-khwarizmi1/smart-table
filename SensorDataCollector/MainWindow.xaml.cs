@@ -2,6 +2,7 @@
 using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
+using Microsoft.Win32;
 using Shared;
 
 namespace SensorDataCollector
@@ -21,6 +22,22 @@ namespace SensorDataCollector
 
             CreateIcon();
             _service.Start();
+            EnsureAppIsInStartup();
+        }
+
+        public void EnsureAppIsInStartup()
+        {
+            var registryName = "Smart Table SensorDataCollector";
+
+            using (RegistryKey key = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true))
+            {
+                object existingKey = key.GetValue(registryName, null);
+
+                if (existingKey == null)
+                {
+                    key.SetValue(registryName, "\"" + System.Reflection.Assembly.GetExecutingAssembly().Location + "\"");
+                }
+            }
         }
 
         public void CreateIcon()
