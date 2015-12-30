@@ -10,15 +10,19 @@ namespace Client.WPF
     {
         SensorDataRepository _repository;
         SettingsRepository _settings;
-
         Settings _currentSettings;
+
         IEnumerable<SensorData> _sensorData;
 
         public SensorDataAggregation()
         {
             _settings = new SettingsRepository();
             _repository = new SensorDataRepository();
+            Reload();
+        }
 
+        public void Reload()
+        {
             _currentSettings = _settings.LastEntrie();
 
             _sensorData = _repository.GetNewerThen(DateTime.UtcNow.Date.AddDays(-30));
