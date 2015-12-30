@@ -2,5 +2,6 @@
 (
 	[Id] INT NOT NULL PRIMARY KEY IDENTITY(1,1),
 	[IntervalLength] INT NOT NULL,
-	[ArduinoComPort] NVARCHAR(20) NULL
+	[ArduinoComPort] NVARCHAR(20) NULL,
+	[StandSitSeparation] INT NOT NULL default(80)
 )

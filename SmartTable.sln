@@ -9,6 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorDataCollector", "SensorDataCollector\SensorDataCollector.csproj", "{93153077-6C98-400A-A476-FC623B1A7A5F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.WPF", "Client.WPF\Client.WPF.csproj", "{1DC83E99-A647-4CB6-A494-D0D056703DE4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61E52540-CCAC-4BFD-8F0D-0BA65D5AC84D}"
+	ProjectSection(SolutionItems) = preProject
+		XAMLReplace.targets = XAMLReplace.targets
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +36,10 @@ Global
 		{93153077-6C98-400A-A476-FC623B1A7A5F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93153077-6C98-400A-A476-FC623B1A7A5F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93153077-6C98-400A-A476-FC623B1A7A5F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DC83E99-A647-4CB6-A494-D0D056703DE4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DC83E99-A647-4CB6-A494-D0D056703DE4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DC83E99-A647-4CB6-A494-D0D056703DE4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DC83E99-A647-4CB6-A494-D0D056703DE4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,0 +1,36 @@
+﻿<Window x:Class="Client.WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart" 
+        xmlns:local="clr-namespace:Client.WPF"
+        mc:Ignorable="d"
+        Title="SmartTable" Height="429.909" Width="756.735">
+
+    <Window.Resources>
+        <local:BalanceToStringConverter x:Key="BalanceToStringConverter"/>
+    </Window.Resources>
+
+        <Grid Margin="0,0,0,3">
+        <chart:PieChart ChartTitle="Sitting vs Standing" ChartSubTitle="{Binding Path=Balance, Converter={StaticResource BalanceToStringConverter}}" Height="318" VerticalAlignment="Top" >
+            <chart:PieChart.Series>
+                <chart:ChartSeries
+                SeriesTitle="Today"
+                DisplayMember="Category"
+                ValueMember="Value"
+                ItemsSource="{Binding Path=Today}" />
+                <chart:ChartSeries
+                SeriesTitle="Running week"
+                DisplayMember="Category"
+                ValueMember="Value"
+                ItemsSource="{Binding Path=RunningWeek}" />
+                <chart:ChartSeries
+                SeriesTitle="This month"
+                DisplayMember="Category"
+                ValueMember="Value"
+                ItemsSource="{Binding Path=Last30Days}" />
+            </chart:PieChart.Series>
+        </chart:PieChart>
+    </Grid>
+</Window>
