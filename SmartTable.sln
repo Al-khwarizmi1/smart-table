@@ -11,11 +11,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SensorDataCollector", "Sens
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Client.WPF", "Client.WPF\Client.WPF.csproj", "{1DC83E99-A647-4CB6-A494-D0D056703DE4}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{61E52540-CCAC-4BFD-8F0D-0BA65D5AC84D}"
-	ProjectSection(SolutionItems) = preProject
-		XAMLReplace.targets = XAMLReplace.targets
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
