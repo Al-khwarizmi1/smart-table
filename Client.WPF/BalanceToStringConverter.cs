@@ -7,7 +7,7 @@ namespace Client.WPF
     {
         public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
         {
-            return string.Format($"In last 30 days sitting {value.ToString()}%");
+            return string.Format($"In last 30 days sat {value.ToString()}%");
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)

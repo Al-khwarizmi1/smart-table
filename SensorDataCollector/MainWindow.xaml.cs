@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Forms;
 using Microsoft.Win32;
+using NLog;
 using Shared;
 
 namespace SensorDataCollector
@@ -14,8 +15,8 @@ namespace SensorDataCollector
         [DllImport("user32.dll", CharSet = CharSet.Auto)]
         internal extern static bool DestroyIcon(IntPtr handle);
 
-        public static string BaseDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-
+        private static string BaseDir = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+        private Logger _logger;
 
         private NotifyIcon _sysTrayIcon;
         private SensorDataService _service;
@@ -24,6 +25,10 @@ namespace SensorDataCollector
         {
             InitializeComponent();
             _service = new SensorDataService();
+            _logger = LogManager.GetCurrentClassLogger();
+
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             CreateIcon();
             _service.Start();
@@ -33,8 +38,13 @@ namespace SensorDataCollector
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e);
+                _logger.Fatal(e);
             }
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            _logger.Fatal(e.ExceptionObject);
         }
 
         public void EnsureAppIsInStartup()
@@ -78,8 +88,25 @@ namespace SensorDataCollector
                 _service.Start();
             };
 
+            var dashboard = new MenuItem { Text = "Dashboard" };
+            dashboard.Click += (o, s) =>
+            {
+                var dashboardPath = Path.Combine(BaseDir + "\\Client.WPF.exe");
+
+                if (File.Exists(dashboardPath))
+                {
+                    var startInfo = new ProcessStartInfo();
+                    startInfo.FileName = dashboardPath;
+                    Process.Start(startInfo);
+                }
+                else
+                {
+                    _logger.Fatal(new FileNotFoundException(dashboardPath));
+                }
+            };
+
             return new MenuItem[] {
-                restart,exit
+               dashboard, restart, exit
             };
         }
     }

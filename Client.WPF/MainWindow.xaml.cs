@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Windows;
+using NLog;
 
 namespace Client.WPF
 {
@@ -9,6 +10,7 @@ namespace Client.WPF
     {
         private SensorDataAggregation _aggregation;
         private System.Timers.Timer _timer;
+        private Logger _logger;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -17,10 +19,16 @@ namespace Client.WPF
         public ObservableCollection<SensorDataAggregateViewModel> Last30Days { get; private set; }
 
         public int Balance { get; set; }
+        public string BalanceString { get; set; }
 
         public MainWindow()
         {
             InitializeComponent();
+
+            _logger = LogManager.GetCurrentClassLogger();
+
+            AppDomain currentDomain = AppDomain.CurrentDomain;
+            currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
             Today = new ObservableCollection<SensorDataAggregateViewModel>();
             RunningWeek = new ObservableCollection<SensorDataAggregateViewModel>();
@@ -34,6 +42,11 @@ namespace Client.WPF
             _timer.Start();
 
             DataContext = this;
+        }
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        {
+            _logger.Fatal(e.ExceptionObject);
         }
 
         private void _timer_Elapsed(object sender, System.Timers.ElapsedEventArgs e)
@@ -59,10 +72,26 @@ namespace Client.WPF
                 ? 0
                 : (int)((double)last30Days.StandMinutes / (double)(last30Days.SitMinutes + last30Days.StandMinutes) * 100.0);
 
+            if (Balance == 0)
+            {
+                BalanceString = "No captured data";
+            }
+            else
+            {
+                var total = last30Days.SitMinutes + last30Days.StandMinutes;
+                BalanceString = $"From {ToTime(last30Days.SitMinutes + last30Days.StandMinutes)} in total, {ToTime(last30Days.StandMinutes)} spent standing, ratio is {Balance}%";
+                if (Balance < 30)
+                {
+                    var required = (int)(total * 0.3 - last30Days.StandMinutes);
+
+                    BalanceString += $", {ToTime(required)} required to reach goal";
+                }
+            }
+
             NotifyPropertyChanged(nameof(Today));
             NotifyPropertyChanged(nameof(RunningWeek));
             NotifyPropertyChanged(nameof(Last30Days));
-            NotifyPropertyChanged(nameof(Balance));
+            NotifyPropertyChanged(nameof(BalanceString));
         }
 
         private void NotifyPropertyChanged(string prop)
@@ -70,6 +99,12 @@ namespace Client.WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
+
+        private string ToTime(int minutes)
+        {
+            var span = TimeSpan.FromMinutes(minutes);
+            return $"{span.Hours:00}h {span.Minutes:00}m";
+        }
 
         private ObservableCollection<SensorDataAggregateViewModel> ToViewModel(SensorDataForDay data)
         {

@@ -13,7 +13,7 @@
     </Window.Resources>
 
         <Grid Margin="0,0,0,3">
-        <chart:PieChart ChartTitle="Sitting vs Standing" ChartSubTitle="{Binding Path=Balance, Converter={StaticResource BalanceToStringConverter}}" Height="318" VerticalAlignment="Top" >
+        <chart:PieChart ChartTitle="Sitting vs Standing" ChartSubTitle="{Binding Path=BalanceString}" Height="318" VerticalAlignment="Top" >
             <chart:PieChart.Series>
                 <chart:ChartSeries
                 SeriesTitle="Today"
@@ -26,7 +26,7 @@
                 ValueMember="Value"
                 ItemsSource="{Binding Path=RunningWeek}" />
                 <chart:ChartSeries
-                SeriesTitle="This month"
+                SeriesTitle="Last 30 days"
                 DisplayMember="Category"
                 ValueMember="Value"
                 ItemsSource="{Binding Path=Last30Days}" />
