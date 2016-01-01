@@ -24,7 +24,6 @@ namespace Microsoft.Shell
     using System.Threading;
     using System.Windows;
     using System.Windows.Threading;
-
     internal enum WM
     {
         NULL = 0x0000,

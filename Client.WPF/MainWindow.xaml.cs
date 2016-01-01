@@ -72,7 +72,7 @@ namespace Client.WPF
                 ? 0
                 : (int)((double)last30Days.StandMinutes / (double)(last30Days.SitMinutes + last30Days.StandMinutes) * 100.0);
 
-            if (Balance == 0)
+            if (last30Days.StandMinutes + last30Days.SitMinutes == 0)
             {
                 BalanceString = "No captured data";
             }

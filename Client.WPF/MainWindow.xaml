@@ -8,10 +8,6 @@
         mc:Ignorable="d"
         Title="SmartTable" Height="429.909" Width="756.735">
 
-    <Window.Resources>
-        <local:BalanceToStringConverter x:Key="BalanceToStringConverter"/>
-    </Window.Resources>
-
         <Grid Margin="0,0,0,3">
         <chart:PieChart ChartTitle="Sitting vs Standing" ChartSubTitle="{Binding Path=BalanceString}" Height="318" VerticalAlignment="Top" >
             <chart:PieChart.Series>
