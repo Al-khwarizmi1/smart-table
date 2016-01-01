@@ -26,6 +26,11 @@ namespace Client.WPF
             _currentSettings = _settings.LastEntrie();
 
             _sensorData = _repository.GetNewerThen(DateTime.UtcNow.Date.AddDays(-30)).ToList();
+
+            foreach (var item in _sensorData)
+            {
+                item.DateTime = item.DateTime.ToLocalTime();
+            }
         }
 
         public SensorDataForDay Today()
