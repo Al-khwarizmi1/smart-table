@@ -25,14 +25,7 @@ namespace Client.WPF
         {
             _currentSettings = _settings.LastEntrie();
 
-            _sensorData = _repository.GetNewerThen(DateTime.UtcNow.Date.AddDays(-30));
-
-            //Change utc date to local
-            foreach (var item in _sensorData)
-            {
-                item.DateTime = DateTime.SpecifyKind(item.DateTime, DateTimeKind.Utc);
-                item.DateTime = item.DateTime.ToLocalTime();
-            }
+            _sensorData = _repository.GetNewerThen(DateTime.UtcNow.Date.AddDays(-30)).ToList();
         }
 
         public SensorDataForDay Today()
