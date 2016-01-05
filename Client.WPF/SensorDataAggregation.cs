@@ -44,6 +44,19 @@ namespace Client.WPF
             return result;
         }
 
+        public IEnumerable<SensorDataForDay> GroupedByDays()
+        {
+            var result = _sensorData
+                .GroupBy(x => x.DateTime.Date)
+                .Select(g => new SensorDataForDay
+                {
+                    Date = g.Key,
+                    SitMinutes = g.Where(x => x.Height <= _currentSettings.StandSitSeparation).Sum(a => a.IntervalLength),
+                    StandMinutes = g.Where(x => x.Height > _currentSettings.StandSitSeparation).Sum(a => a.IntervalLength)
+                });
+            return result;
+        }
+
         public SensorDataForDay RunningWeek()
         {
             var date = DateTime.Now.Date.AddDays(-7);

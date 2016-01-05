@@ -6,27 +6,39 @@
         xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart" 
         xmlns:local="clr-namespace:Client.WPF"
         mc:Ignorable="d"
-        Title="SmartTable" Height="429.909" Width="756.735">
+        Title="SmartTable" Width="756.735" Height="350">
 
-        <Grid Margin="0,0,0,3">
-        <chart:PieChart ChartTitle="Sitting vs Standing" ChartSubTitle="{Binding Path=BalanceString}" Height="318" VerticalAlignment="Top" >
-            <chart:PieChart.Series>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="300"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+        <chart:RadialGaugeChart  
+            Grid.Row="0"
+            ChartTitle="Sitting vs Standing"
+            ChartSubTitle="{Binding Path=BalanceString}"
+            ChartTitleVisibility="Collapsed"
+            ChartLegendVisibility="Collapsed"
+            IsRowColumnSwitched="True"
+            >
+            <chart:RadialGaugeChart.Series>
                 <chart:ChartSeries
-                SeriesTitle="Today"
-                DisplayMember="Category"
-                ValueMember="Value"
-                ItemsSource="{Binding Path=Today}" />
+                        SeriesTitle="Today"
+                        DisplayMember="Category"
+                        ValueMember="Value"
+                        ItemsSource="{Binding Path=TodayPerc}">
+                </chart:ChartSeries>
                 <chart:ChartSeries
-                SeriesTitle="Running week"
-                DisplayMember="Category"
-                ValueMember="Value"
-                ItemsSource="{Binding Path=RunningWeek}" />
+                        SeriesTitle="Last 7 days"
+                        DisplayMember="Category"
+                        ValueMember="Value"
+                        ItemsSource="{Binding Path=Last7DaysPerc}" />
                 <chart:ChartSeries
-                SeriesTitle="Last 30 days"
-                DisplayMember="Category"
-                ValueMember="Value"
-                ItemsSource="{Binding Path=Last30Days}" />
-            </chart:PieChart.Series>
-        </chart:PieChart>
+                        SeriesTitle="Last 30 days"
+                        DisplayMember="Category"
+                        ValueMember="Value"
+                        ItemsSource="{Binding Path=Last30DaysPerc}" />
+            </chart:RadialGaugeChart.Series>
+        </chart:RadialGaugeChart>
     </Grid>
 </Window>

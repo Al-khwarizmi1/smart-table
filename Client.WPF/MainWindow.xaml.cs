@@ -14,9 +14,9 @@ namespace Client.WPF
 
         public event PropertyChangedEventHandler PropertyChanged;
 
-        public ObservableCollection<SensorDataAggregateViewModel> Today { get; private set; }
-        public ObservableCollection<SensorDataAggregateViewModel> RunningWeek { get; private set; }
-        public ObservableCollection<SensorDataAggregateViewModel> Last30Days { get; private set; }
+        public ObservableCollection<SensorDataAggregateViewModel> TodayPerc { get; private set; }
+        public ObservableCollection<SensorDataAggregateViewModel> Last7DaysPerc { get; private set; }
+        public ObservableCollection<SensorDataAggregateViewModel> Last30DaysPerc { get; private set; }
 
         public int Balance { get; set; }
         public string BalanceString { get; set; }
@@ -30,9 +30,10 @@ namespace Client.WPF
             AppDomain currentDomain = AppDomain.CurrentDomain;
             currentDomain.UnhandledException += CurrentDomain_UnhandledException;
 
-            Today = new ObservableCollection<SensorDataAggregateViewModel>();
-            RunningWeek = new ObservableCollection<SensorDataAggregateViewModel>();
-            Last30Days = new ObservableCollection<SensorDataAggregateViewModel>();
+            TodayPerc = new ObservableCollection<SensorDataAggregateViewModel>();
+            Last7DaysPerc = new ObservableCollection<SensorDataAggregateViewModel>();
+            Last30DaysPerc = new ObservableCollection<SensorDataAggregateViewModel>();
+
             _timer = new System.Timers.Timer();
             _timer.Interval = TimeSpan.FromMinutes(2).TotalMilliseconds;
             _timer.Elapsed += _timer_Elapsed;
@@ -42,6 +43,7 @@ namespace Client.WPF
             _timer.Start();
 
             DataContext = this;
+
         }
 
         private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
@@ -61,12 +63,10 @@ namespace Client.WPF
             _aggregation.Reload();
 
             var today = _aggregation.Today();
-            var runningWeek = _aggregation.RunningWeek();
+            var last7Days = _aggregation.RunningWeek();
             var last30Days = _aggregation.Last30Days();
+            var last30DaysGrouped = _aggregation.GroupedByDays();
 
-            Today = ToViewModel(today);
-            RunningWeek = ToViewModel(runningWeek);
-            Last30Days = ToViewModel(last30Days);
 
             Balance = last30Days.StandMinutes == 0
                 ? 0
@@ -79,7 +79,7 @@ namespace Client.WPF
             else
             {
                 var total = last30Days.SitMinutes + last30Days.StandMinutes;
-                BalanceString = $"From {ToTime(last30Days.SitMinutes + last30Days.StandMinutes)} in total, {ToTime(last30Days.StandMinutes)} spent standing, ratio is {Balance}%";
+                BalanceString = $"From {ToTime(total)} in total, {ToTime(last30Days.StandMinutes)} spent standing, ratio is {Balance}%";
                 if (Balance < 30)
                 {
                     var required = (int)(total * 0.3 - last30Days.StandMinutes);
@@ -88,10 +88,15 @@ namespace Client.WPF
                 }
             }
 
-            NotifyPropertyChanged(nameof(Today));
-            NotifyPropertyChanged(nameof(RunningWeek));
-            NotifyPropertyChanged(nameof(Last30Days));
+            TodayPerc = ToViewModelPercent(today);
+            Last7DaysPerc = ToViewModelPercent(last7Days);
+            Last30DaysPerc = ToViewModelPercent(last30Days);
+
             NotifyPropertyChanged(nameof(BalanceString));
+            NotifyPropertyChanged(nameof(TodayPerc));
+            NotifyPropertyChanged(nameof(Last7DaysPerc));
+            NotifyPropertyChanged(nameof(Last30DaysPerc));
+
         }
 
         private void NotifyPropertyChanged(string prop)
@@ -103,15 +108,26 @@ namespace Client.WPF
         private string ToTime(int minutes)
         {
             var span = TimeSpan.FromMinutes(minutes);
-            return $"{span.Hours:00}h {span.Minutes:00}m";
+            return $"{span.TotalHours:00}h {span.Minutes:00}m";
         }
+
 
         private ObservableCollection<SensorDataAggregateViewModel> ToViewModel(SensorDataForDay data)
         {
             var result = new ObservableCollection<SensorDataAggregateViewModel>();
 
-            result.Add(new SensorDataAggregateViewModel { Category = "Sit", Value = data.SitMinutes });
-            result.Add(new SensorDataAggregateViewModel { Category = "Stand", Value = data.StandMinutes });
+            result.Add(new SensorDataAggregateViewModel { Category = "Sitting", Value = data.SitMinutes });
+            result.Add(new SensorDataAggregateViewModel { Category = "Standing", Value = data.StandMinutes });
+
+            return result;
+        }
+
+
+        private ObservableCollection<SensorDataAggregateViewModel> ToViewModelPercent(SensorDataForDay data)
+        {
+            var result = new ObservableCollection<SensorDataAggregateViewModel>();
+
+            result.Add(new SensorDataAggregateViewModel { Category = BalanceString, Value = (int)((data.SitMinutes / (double)(data.SitMinutes + data.StandMinutes)) * 100) });
 
             return result;
         }
