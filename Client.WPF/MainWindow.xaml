@@ -23,18 +23,18 @@
             >
             <chart:RadialGaugeChart.Series>
                 <chart:ChartSeries
-                        SeriesTitle="Today"
+                        SeriesTitle="{Binding Path=TodayTitle}"
                         DisplayMember="Category"
                         ValueMember="Value"
                         ItemsSource="{Binding Path=TodayPerc}">
                 </chart:ChartSeries>
                 <chart:ChartSeries
-                        SeriesTitle="Last 7 days"
+                        SeriesTitle="{Binding Path=Last7DaysTitle}"
                         DisplayMember="Category"
                         ValueMember="Value"
                         ItemsSource="{Binding Path=Last7DaysPerc}" />
                 <chart:ChartSeries
-                        SeriesTitle="Last 30 days"
+                        SeriesTitle="{Binding Path=Last30DaysTitle}"
                         DisplayMember="Category"
                         ValueMember="Value"
                         ItemsSource="{Binding Path=Last30DaysPerc}" />

@@ -18,6 +18,10 @@ namespace Client.WPF
         public ObservableCollection<SensorDataAggregateViewModel> Last7DaysPerc { get; private set; }
         public ObservableCollection<SensorDataAggregateViewModel> Last30DaysPerc { get; private set; }
 
+        public string TodayTitle { get; set; }
+        public string Last7DaysTitle { get; set; }
+        public string Last30DaysTitle { get; set; }
+
         public int Balance { get; set; }
         public string BalanceString { get; set; }
 
@@ -92,11 +96,18 @@ namespace Client.WPF
             Last7DaysPerc = ToViewModelPercent(last7Days);
             Last30DaysPerc = ToViewModelPercent(last30Days);
 
+            TodayTitle = $"Today [{ToTime(today.SitMinutes)}/{ToTime(today.StandMinutes)}]";
+            Last7DaysTitle = $"Last 7 days [{ToTime(last7Days.SitMinutes)}/{ToTime(last7Days.StandMinutes)}]";
+            Last30DaysTitle = $"Last 30 days [{ToTime(last30Days.SitMinutes)}/{ToTime(last30Days.StandMinutes)}]";
+
+            NotifyPropertyChanged(nameof(TodayTitle));
+            NotifyPropertyChanged(nameof(Last7DaysTitle));
+            NotifyPropertyChanged(nameof(Last30DaysTitle));
+
             NotifyPropertyChanged(nameof(BalanceString));
             NotifyPropertyChanged(nameof(TodayPerc));
             NotifyPropertyChanged(nameof(Last7DaysPerc));
             NotifyPropertyChanged(nameof(Last30DaysPerc));
-
         }
 
         private void NotifyPropertyChanged(string prop)
