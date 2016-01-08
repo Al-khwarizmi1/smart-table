@@ -6,11 +6,11 @@
         xmlns:chart="clr-namespace:De.TorstenMandelkow.MetroChart;assembly=De.TorstenMandelkow.MetroChart" 
         xmlns:local="clr-namespace:Client.WPF"
         mc:Ignorable="d"
-        Title="SmartTable" Width="756.735" Height="350">
+        Title="SmartTable" Width="756.735" Height="704.087">
 
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition Height="300"></RowDefinition>
+            <RowDefinition Height="340"></RowDefinition>
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
         <chart:RadialGaugeChart  
@@ -40,5 +40,9 @@
                         ItemsSource="{Binding Path=Last30DaysPerc}" />
             </chart:RadialGaugeChart.Series>
         </chart:RadialGaugeChart>
+        <chart:StackedColumnChart Grid.Row="1" x:Name="StackedColumns" 
+            ChartTitleVisibility="Collapsed">
+        </chart:StackedColumnChart>
+        
     </Grid>
 </Window>

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Windows;
 using NLog;
 
@@ -70,6 +71,7 @@ namespace Client.WPF
             var last7Days = _aggregation.RunningWeek();
             var last30Days = _aggregation.Last30Days();
             var last30DaysGrouped = _aggregation.GroupedByDays();
+            var last14DaysGrouped = last30DaysGrouped.Take(14);
 
 
             Balance = last30Days.StandMinutes == 0
@@ -108,6 +110,41 @@ namespace Client.WPF
             NotifyPropertyChanged(nameof(TodayPerc));
             NotifyPropertyChanged(nameof(Last7DaysPerc));
             NotifyPropertyChanged(nameof(Last30DaysPerc));
+
+
+            Application.Current.Dispatcher.Invoke(() =>
+            {
+                var series = new ObservableCollection<De.TorstenMandelkow.MetroChart.ChartSeries>();
+                var dayFiller = new ObservableCollection<De.TorstenMandelkow.MetroChart.ChartSeries>(
+                    Enumerable
+                    .Range(0, 14)
+                    .Select(x => DateTime.Now.Date.AddDays(x * -1))
+                    .OrderBy(x => x)
+                    .Select(x => new De.TorstenMandelkow.MetroChart.ChartSeries
+                    {
+                        SeriesTitle = ToDate(x),
+                        DisplayMember = "Category",
+                        ValueMember = "Value",
+                        ItemsSource = ToViewModel(new SensorDataForDay { Date = x, SitMinutes = 0, StandMinutes = 0 })
+                    }));
+
+                foreach (var day in last14DaysGrouped)
+                {
+                    series.Add(new De.TorstenMandelkow.MetroChart.ChartSeries
+                    {
+                        SeriesTitle = ToDate(day.Date),
+                        DisplayMember = "Category",
+                        ValueMember = "Value",
+                        ItemsSource = ToViewModel(day)
+                    });
+                }
+
+                var filledEmptyDays = new ObservableCollection<De.TorstenMandelkow.MetroChart.ChartSeries>(
+                    dayFiller
+                    .Select(x => series.FirstOrDefault(a => a.SeriesTitle == x.SeriesTitle) ?? x));
+
+                StackedColumns.Series = filledEmptyDays;
+            });
         }
 
         private void NotifyPropertyChanged(string prop)
@@ -115,13 +152,16 @@ namespace Client.WPF
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(prop));
         }
 
-
         private string ToTime(int minutes)
         {
             var span = TimeSpan.FromMinutes(minutes);
             return $"{span.TotalHours:00}h {span.Minutes:00}m";
         }
 
+        private string ToDate(DateTime date)
+        {
+            return $"{date:MM-dd}";
+        }
 
         private ObservableCollection<SensorDataAggregateViewModel> ToViewModel(SensorDataForDay data)
         {
@@ -132,7 +172,6 @@ namespace Client.WPF
 
             return result;
         }
-
 
         private ObservableCollection<SensorDataAggregateViewModel> ToViewModelPercent(SensorDataForDay data)
         {
