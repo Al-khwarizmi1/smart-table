@@ -155,7 +155,14 @@ namespace Client.WPF
         private string ToTime(int minutes)
         {
             var span = TimeSpan.FromMinutes(minutes);
-            return $"{span.TotalHours:00}h {span.Minutes:00}m";
+            if ((int)span.TotalDays > 0)
+            {
+                return $"{(int)span.TotalDays}d {span.Hours:00}h {span.Minutes:00}m";
+            }
+            else
+            {
+                return $"{span.TotalHours:00}h {span.Minutes:00}m";
+            }
         }
 
         private string ToDate(DateTime date)
