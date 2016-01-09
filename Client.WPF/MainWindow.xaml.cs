@@ -161,7 +161,7 @@ namespace Client.WPF
             }
             else
             {
-                return $"{span.TotalHours:00}h {span.Minutes:00}m";
+                return $"{(int)span.TotalHours:00}h {span.Minutes:00}m";
             }
         }
 
