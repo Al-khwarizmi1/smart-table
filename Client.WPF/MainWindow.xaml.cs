@@ -70,8 +70,8 @@ namespace Client.WPF
             var today = _aggregation.Today();
             var last7Days = _aggregation.RunningWeek();
             var last30Days = _aggregation.Last30Days();
-            var last30DaysGrouped = _aggregation.GroupedByDays();
-            var last14DaysGrouped = last30DaysGrouped.Take(14);
+            var last30DaysGrouped = _aggregation.GroupedByDays().ToList();
+            var last14DaysGrouped = last30DaysGrouped.Skip(last30DaysGrouped.Count() > 14 ? last30DaysGrouped.Count() - 14 : last30DaysGrouped.Count());
 
 
             Balance = last30Days.StandMinutes == 0
