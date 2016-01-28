@@ -18,10 +18,12 @@ namespace Client.WPF
         public ObservableCollection<SensorDataAggregateViewModel> TodayPerc { get; private set; }
         public ObservableCollection<SensorDataAggregateViewModel> Last7DaysPerc { get; private set; }
         public ObservableCollection<SensorDataAggregateViewModel> Last30DaysPerc { get; private set; }
+        public ObservableCollection<SensorDataAggregateViewModel> AllPerc { get; private set; }
 
         public string TodayTitle { get; set; }
         public string Last7DaysTitle { get; set; }
         public string Last30DaysTitle { get; set; }
+        public string AllTitle { get; set; }
 
         public int Balance { get; set; }
         public string BalanceString { get; set; }
@@ -38,6 +40,7 @@ namespace Client.WPF
             TodayPerc = new ObservableCollection<SensorDataAggregateViewModel>();
             Last7DaysPerc = new ObservableCollection<SensorDataAggregateViewModel>();
             Last30DaysPerc = new ObservableCollection<SensorDataAggregateViewModel>();
+            AllPerc = new ObservableCollection<SensorDataAggregateViewModel>();
 
             _timer = new System.Timers.Timer();
             _timer.Interval = TimeSpan.FromMinutes(2).TotalMilliseconds;
@@ -70,25 +73,26 @@ namespace Client.WPF
             var today = _aggregation.Today();
             var last7Days = _aggregation.RunningWeek();
             var last30Days = _aggregation.Last30Days();
+            var all = _aggregation.Last30Days();
             var last30DaysGrouped = _aggregation.GroupedByDays().ToList();
             var last14DaysGrouped = last30DaysGrouped.Skip(last30DaysGrouped.Count() > 14 ? last30DaysGrouped.Count() - 14 : last30DaysGrouped.Count());
 
 
-            Balance = last30Days.StandMinutes == 0
+            Balance = all.StandMinutes == 0
                 ? 0
-                : (int)((double)last30Days.StandMinutes / (double)(last30Days.SitMinutes + last30Days.StandMinutes) * 100.0);
+                : (int)((double)all.StandMinutes / (double)(all.SitMinutes + all.StandMinutes) * 100.0);
 
-            if (last30Days.StandMinutes + last30Days.SitMinutes == 0)
+            if (all.StandMinutes + all.SitMinutes == 0)
             {
                 BalanceString = "No captured data";
             }
             else
             {
-                var total = last30Days.SitMinutes + last30Days.StandMinutes;
-                BalanceString = $"From {ToTime(total)} in total, {ToTime(last30Days.StandMinutes)} spent standing, ratio is {Balance}%";
+                var total = all.SitMinutes + all.StandMinutes;
+                BalanceString = $"From {ToTime(total)} in total, {ToTime(all.StandMinutes)} spent standing, ratio is {Balance}%";
                 if (Balance < 30)
                 {
-                    var required = (int)(total * 0.3 - last30Days.StandMinutes);
+                    var required = (int)(total * 0.3 - all.StandMinutes);
 
                     BalanceString += $", {ToTime(required)} required to reach goal";
                 }
@@ -97,19 +101,23 @@ namespace Client.WPF
             TodayPerc = ToViewModelPercent(today);
             Last7DaysPerc = ToViewModelPercent(last7Days);
             Last30DaysPerc = ToViewModelPercent(last30Days);
+            AllPerc = ToViewModelPercent(all);
 
             TodayTitle = $"Today [{ToTime(today.SitMinutes)}/{ToTime(today.StandMinutes)}]";
             Last7DaysTitle = $"Last 7 days [{ToTime(last7Days.SitMinutes)}/{ToTime(last7Days.StandMinutes)}]";
             Last30DaysTitle = $"Last 30 days [{ToTime(last30Days.SitMinutes)}/{ToTime(last30Days.StandMinutes)}]";
+            AllTitle = $"All time [{ToTime(all.SitMinutes)}/{ToTime(all.StandMinutes)}]";
 
             NotifyPropertyChanged(nameof(TodayTitle));
             NotifyPropertyChanged(nameof(Last7DaysTitle));
             NotifyPropertyChanged(nameof(Last30DaysTitle));
+            NotifyPropertyChanged(nameof(AllTitle));
 
             NotifyPropertyChanged(nameof(BalanceString));
             NotifyPropertyChanged(nameof(TodayPerc));
             NotifyPropertyChanged(nameof(Last7DaysPerc));
             NotifyPropertyChanged(nameof(Last30DaysPerc));
+            NotifyPropertyChanged(nameof(AllPerc));
 
 
             Application.Current.Dispatcher.Invoke(() =>

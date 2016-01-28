@@ -25,7 +25,7 @@ namespace Client.WPF
         {
             _currentSettings = _settings.LastEntrie();
 
-            _sensorData = _repository.GetNewerThen(DateTime.UtcNow.Date.AddDays(-30)).ToList();
+            _sensorData = _repository.All().ToList();
 
             foreach (var item in _sensorData)
             {
@@ -76,6 +76,16 @@ namespace Client.WPF
 
             var result = AggregateList(data);
             result.Date = date;
+
+            return result;
+        }
+
+        public SensorDataForDay All()
+        {
+            var data = _sensorData;
+
+            var result = AggregateList(data);
+            result.Date = data.Last().DateTime;
 
             return result;
         }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using Shared.Entities;
 
@@ -8,7 +7,7 @@ namespace Shared.DataAccess
 {
     public class SensorDataRepository
     {
-        DataContext _context;
+        private readonly DataContext _context;
 
         public SensorDataRepository()
         {
@@ -32,6 +31,11 @@ namespace Shared.DataAccess
         public IEnumerable<SensorData> GetNewerThen(DateTime date)
         {
             return _context.SensorData.Where(x => x.DateTime >= date);
+        }
+
+        public IEnumerable<SensorData> All()
+        {
+            return _context.SensorData;
         }
     }
 }
